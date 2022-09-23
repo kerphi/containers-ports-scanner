@@ -1,0 +1,34 @@
+# docker-compose.yml used to develop this tool
+# it could be used as an example to create your own
+version: "3.5"
+
+services:
+
+  # a first instance scanning docker ports
+  containers-ports-scanner-1800:
+    image: abesesr/containers-ports-scanner:1.0.0
+    build: ./image/
+    container_name: containers-ports-scanner-1800
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 1800:80
+    environment:
+      CPS_SERVERS_TO_SCAN: "http://127.0.0.1:1800,http://127.0.0.1:1801"
+
+  # a second instance scanning docker ports
+  # (this is only for debug because for a real usecase, 
+  # it should be deployed on another docker server)
+  containers-ports-scanner-1801:
+    image: abesesr/containers-ports-scanner:1.0.0
+    build: ./image/
+    container_name: containers-ports-scanner-1801
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 1801:80
+    environment:
+      CPS_SERVERS_TO_SCAN: "http://127.0.0.1:1800,http://127.0.0.1:1801"
+
